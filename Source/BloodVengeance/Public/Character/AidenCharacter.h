@@ -16,6 +16,11 @@ public:
 
 	AAidenCharacter();
 
+	virtual void PossessedBy(AController* NewController) override;
+
+	virtual void OnRep_PlayerState() override;
+
+
 private:
 
 	//카메라
@@ -26,4 +31,7 @@ private:
 	TObjectPtr<UCameraComponent> FollowCamera;
 	//카메라
 
+private:
+
+	void InitAbilityActorInfo();
 };

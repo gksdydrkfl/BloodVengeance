@@ -2,7 +2,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-
+#include "Player/BVPlayerState.h"
+#include "GAS/BVAbilitySystemComponent.h"
 
 AAidenCharacter::AAidenCharacter()
 {
@@ -25,4 +26,33 @@ AAidenCharacter::AAidenCharacter()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.f, 0.0f);
+
+}
+
+void AAidenCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	InitAbilityActorInfo();
+}
+
+void AAidenCharacter::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+
+
+}
+
+void AAidenCharacter::InitAbilityActorInfo()
+{
+	ABVPlayerState* BVPlayerState = GetPlayerState<ABVPlayerState>();
+
+	if (BVPlayerState)
+	{
+		BVPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(BVPlayerState, this);
+
+		AbilitySystemComponent = BVPlayerState->GetAbilitySystemComponent();
+
+		AttributeSet = BVPlayerState->GetAttributeSet();
+	}
 }
