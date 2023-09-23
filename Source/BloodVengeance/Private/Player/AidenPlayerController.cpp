@@ -1,8 +1,14 @@
 #include "Player/AidenPlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Player/BVPlayerState.h"
+#include "UI/HUD/BVMainHUD.h"
+#include "BloodVengeance/DebugMacro.h"
+
+
 AAidenPlayerController::AAidenPlayerController()
 {
+
 }
 
 void AAidenPlayerController::BeginPlay()
@@ -55,9 +61,31 @@ void AAidenPlayerController::Look(const FInputActionValue& Value)
     APawn* PlayerPawn = GetPawn<APawn>();
     if (PlayerPawn)
     {
-        UE_LOG(LogTemp, Warning, TEXT("x : %f"), LookAxisVector.X);
-        UE_LOG(LogTemp, Warning, TEXT("Y : %f"), LookAxisVector.Y);
         PlayerPawn->AddControllerYawInput(LookAxisVector.X);
         PlayerPawn->AddControllerPitchInput(LookAxisVector.Y);
     }
+}
+
+void AAidenPlayerController::CreateHUDWidget()
+{
+    ABVPlayerState* BVPlayerState = GetPlayerState<ABVPlayerState>();
+
+    if (BVPlayerState)
+	{
+		BVMainHUD = Cast<ABVMainHUD>(GetHUD());
+		if (BVMainHUD)
+		{
+			BVMainHUD->CreateHUDWidget();
+
+			BVMainHUD->UpdateHealthBar(BVPlayerState->GetHealth() / BVPlayerState->GetMaxHealth());
+			BVMainHUD->UpdateStaminaBar(BVPlayerState->GetStamina() / BVPlayerState->GetMaxStamina());
+		}
+    }
+}
+
+void AAidenPlayerController::OnRep_PlayerState()
+{
+    Super::OnRep_PlayerState();
+
+
 }

@@ -2,11 +2,12 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
+#include "GameplayEffectTypes.h"
 #include "GameFramework/PlayerState.h"
 #include "BVPlayerState.generated.h"
 
 class UAbilitySystemComponent;
-class UAttributeSet;
+class UBVAttributeSet;
 
 UCLASS()
 class BLOODVENGEANCE_API ABVPlayerState : public APlayerState, public IAbilitySystemInterface
@@ -17,6 +18,8 @@ public:
 
 	ABVPlayerState();
 
+	virtual void BeginPlay() override;
+
 private:
 
 	//GameAbilitySystem
@@ -24,12 +27,31 @@ private:
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY()
-	TObjectPtr<UAttributeSet> AttributeSet;
+	TObjectPtr<UBVAttributeSet> AttributeSet;
 	//GameAbilitySystem
+
+protected:
+
+	FDelegateHandle HealthChangedDelegateHandle;
+	FDelegateHandle MaxHealthChangedDelegateHandle;
+	FDelegateHandle StaminaChangedDelegateHandle;
+	FDelegateHandle MaxStaminaChangedDelegateHandle;
 
 public:
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
+	UBVAttributeSet* GetAttributeSet() const { return AttributeSet; }
+
+public:
+
+	float GetHealth() const;
+	float GetMaxHealth() const;
+	float GetStamina() const;
+	float GetMaxStamina() const;
+
+	virtual void HealthChanged(const FOnAttributeChangeData& Data);
+	virtual void MaxHealthChanged(const FOnAttributeChangeData& Data);
+	virtual void StaminaChanged(const FOnAttributeChangeData& Data);
+	virtual void MaxStaminaChanged(const FOnAttributeChangeData& Data);
 
 };

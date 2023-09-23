@@ -4,6 +4,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/BVPlayerState.h"
 #include "GAS/BVAbilitySystemComponent.h"
+#include "Player/AidenPlayerController.h"
 
 AAidenCharacter::AAidenCharacter()
 {
@@ -34,6 +35,13 @@ void AAidenCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	InitAbilityActorInfo();
+
+	AAidenPlayerController* AidenPlayerController = Cast<AAidenPlayerController>(GetController());
+
+	if (AidenPlayerController)
+	{
+		AidenPlayerController->CreateHUDWidget();
+	}
 }
 
 void AAidenCharacter::OnRep_PlayerState()
