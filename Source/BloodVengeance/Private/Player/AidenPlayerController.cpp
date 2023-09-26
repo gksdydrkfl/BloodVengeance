@@ -3,8 +3,13 @@
 #include "EnhancedInputComponent.h"
 #include "Player/BVPlayerState.h"
 #include "UI/HUD/BVMainHUD.h"
+#include "Player/BVPlayerState.h"
 #include "BloodVengeance/DebugMacro.h"
+#include "AbilitySystemComponent.h"
+#include "Input/BVEnhancedInputComponent.h"
 
+
+#include "BloodVengeance/DebugMacro.h"
 
 AAidenPlayerController::AAidenPlayerController()
 {
@@ -27,14 +32,41 @@ void AAidenPlayerController::BeginPlay()
     }
 }
 
+void AAidenPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
+{
+    Debug::Log(*InputTag.ToString());
+}
+
+void AAidenPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
+{
+    Debug::Log(*InputTag.ToString());
+}
+
+void AAidenPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
+{
+    Debug::Log(*InputTag.ToString());
+}
+
 void AAidenPlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
 
-    UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
+    UBVEnhancedInputComponent* BVEnhancedInputComponent = CastChecked<UBVEnhancedInputComponent>(InputComponent);
+    //UAuraInputComponent* AuraInputComponent = CastChecked<UAuraInputComponent>(InputComponent);
+    BVEnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAidenPlayerController::Move);
+    BVEnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AAidenPlayerController::Look);
+    BVEnhancedInputComponent->BindAbilityActions(InputDataAsset, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
+}
 
-    EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAidenPlayerController::Move);
-    EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AAidenPlayerController::Look);
+void AAidenPlayerController::OnPossess(APawn* InPawn)
+{
+    Super::OnPossess(InPawn);
+
+    //ABVPlayerState* BVPlayerState = GetPlayerState<ABVPlayerState>();
+    //if (BVPlayerState)
+    //{
+    //    BVPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(BVPlayerState, InPawn);
+    //}
 }
 
 void AAidenPlayerController::Move(const FInputActionValue& Value)
@@ -86,6 +118,4 @@ void AAidenPlayerController::CreateHUDWidget()
 void AAidenPlayerController::OnRep_PlayerState()
 {
     Super::OnRep_PlayerState();
-
-
 }

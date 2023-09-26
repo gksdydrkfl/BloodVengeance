@@ -20,7 +20,6 @@ void UBVAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	DOREPLIFETIME_CONDITION_NOTIFY(UBVAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UBVAttributeSet, Stamina, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UBVAttributeSet, MaxStamina, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UBVAttributeSet, MaxStamina, COND_None, REPNOTIFY_OnChanged);
 }
 
 void UBVAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const

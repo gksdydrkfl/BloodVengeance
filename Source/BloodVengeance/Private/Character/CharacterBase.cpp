@@ -1,4 +1,5 @@
 #include "Character/CharacterBase.h"
+#include "GAS/BVAbilitySystemComponent.h"
 
 ACharacterBase::ACharacterBase()
 {
@@ -15,5 +16,6 @@ void ACharacterBase::BeginPlay()
 
 UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
 {
-	return AbilitySystemComponent;
+	return AbilitySystemComponent.Get();
 }
+

@@ -48,7 +48,14 @@ void AAidenCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 
+	InitAbilityActorInfo();
 
+	AAidenPlayerController* AidenPlayerController = Cast<AAidenPlayerController>(GetController());
+
+	if (AidenPlayerController)
+	{
+		AidenPlayerController->CreateHUDWidget();
+	}
 }
 
 void AAidenCharacter::InitAbilityActorInfo()
@@ -59,7 +66,7 @@ void AAidenCharacter::InitAbilityActorInfo()
 	{
 		BVPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(BVPlayerState, this);
 
-		AbilitySystemComponent = BVPlayerState->GetAbilitySystemComponent();
+		AbilitySystemComponent = Cast<UBVAbilitySystemComponent>(BVPlayerState->GetAbilitySystemComponent());
 
 		AttributeSet = BVPlayerState->GetAttributeSet();
 	}

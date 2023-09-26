@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Input/InputDataAsset.h"
 #include "AidenPlayerController.generated.h"
 
 class UInputMappingContext;
@@ -20,10 +21,11 @@ public:
 
 protected:
 
-	virtual void BeginPlay();
+	virtual void BeginPlay() override;
 
-	virtual void SetupInputComponent();
+	virtual void SetupInputComponent() override;
 
+	virtual void OnPossess(APawn* InPawn) override;
 private:
 
 	// 입력관련
@@ -35,6 +37,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> LookAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputDataAsset> InputDataAsset;
 	// 입력관련
 
 	ABVMainHUD* BVMainHUD;
@@ -43,6 +48,10 @@ public:
 
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+
+	void AbilityInputTagPressed(FGameplayTag InputTag);
+	void AbilityInputTagReleased(FGameplayTag InputTag);
+	void AbilityInputTagHeld(FGameplayTag InputTag);
 
 	void CreateHUDWidget();
 

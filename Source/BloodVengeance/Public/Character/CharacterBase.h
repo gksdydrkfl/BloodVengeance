@@ -5,8 +5,9 @@
 #include "GameFramework/Character.h"
 #include "CharacterBase.generated.h"
 
-class UAbilitySystemComponent;
+class UBVAbilitySystemComponent;
 class UBVAttributeSet;
+class UAbilitySystemComponent;
 
 UCLASS()
 class BLOODVENGEANCE_API ACharacterBase : public ACharacter, public IAbilitySystemInterface
@@ -23,8 +24,9 @@ protected:
 
 	//GameAbilitySystem
 
-	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
-
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UBVAbilitySystemComponent> AbilitySystemComponent;
+	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UBVAttributeSet> AttributeSet;
 
 
@@ -33,6 +35,7 @@ protected:
 public:	
 
 
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UBVAttributeSet* GetAttributeSet() const { return AttributeSet; }
+
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 };
