@@ -9,6 +9,7 @@ class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
 class ABVMainHUD;
+class UBVAbilitySystemComponent;
 
 UCLASS()
 class BLOODVENGEANCE_API AAidenPlayerController : public APlayerController
@@ -28,7 +29,6 @@ protected:
 	virtual void OnPossess(APawn* InPawn) override;
 private:
 
-	// 입력관련
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputMappingContext> InputMapping;
 
@@ -40,9 +40,13 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputDataAsset> InputDataAsset;
-	// 입력관련
 
 	ABVMainHUD* BVMainHUD;
+
+	UPROPERTY()
+	TObjectPtr<UBVAbilitySystemComponent> BVAbilitySystemComponent;
+
+
 
 public:
 
@@ -57,9 +61,9 @@ public:
 
 	ABVMainHUD* GetMainHUD() const { return BVMainHUD; }
 
+	UBVAbilitySystemComponent* GetASC();
+
 protected:
-
-
 
 	virtual void OnRep_PlayerState() override;
 };

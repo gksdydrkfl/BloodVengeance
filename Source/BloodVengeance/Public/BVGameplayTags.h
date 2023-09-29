@@ -10,11 +10,15 @@ struct FBVGameplayTags
 public:
 
 	static const FBVGameplayTags& Get() { return GameplayTags; }
-	void InitGameplayTags();
+	static void InitGameplayTags();
 
 	FGameplayTag InputTag_LMB;
 	FGameplayTag InputTag_RMB;
 	FGameplayTag InputTag_1;
+
+	FGameplayTag Montage_NextAttackCheck;
+	FGameplayTag Montage_EndAttackCheck;
+
 protected:
 
 private:

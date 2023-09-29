@@ -14,4 +14,13 @@ class BLOODVENGEANCE_API UBVGameplayAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
 	
+private:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	FGameplayTag StartupInputTag;
+
+public:
+
+	FGameplayTag GetStartUpInputTag() const { return StartupInputTag; }
+
 };

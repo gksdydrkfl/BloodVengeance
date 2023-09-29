@@ -10,8 +10,10 @@ class BLOODVENGEANCE_API UBVEnhancedInputComponent : public UEnhancedInputCompon
 {
 	GENERATED_BODY()
 public:
+
 	template<class UserClass, typename PressedFuncType, typename ReleasedFuncType, typename HeldFuncType>
 	void BindAbilityActions(const UInputDataAsset* InputAction, UserClass* Object, PressedFuncType PressedFunc, ReleasedFuncType ReleasedFunc, HeldFuncType HeldFunc);
+
 };
 
 template <class UserClass, typename PressedFuncType, typename ReleasedFuncType, typename HeldFuncType>

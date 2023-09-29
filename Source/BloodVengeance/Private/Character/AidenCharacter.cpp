@@ -36,6 +36,8 @@ void AAidenCharacter::PossessedBy(AController* NewController)
 
 	InitAbilityActorInfo();
 
+	AddCharacterAbilities();
+
 	AAidenPlayerController* AidenPlayerController = Cast<AAidenPlayerController>(GetController());
 
 	if (AidenPlayerController)
@@ -56,6 +58,13 @@ void AAidenCharacter::OnRep_PlayerState()
 	{
 		AidenPlayerController->CreateHUDWidget();
 	}
+}
+
+void AAidenCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+
 }
 
 void AAidenCharacter::InitAbilityActorInfo()

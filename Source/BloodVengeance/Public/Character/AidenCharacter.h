@@ -20,6 +20,8 @@ public:
 
 	virtual void OnRep_PlayerState() override;
 
+	virtual void BeginPlay() override;
+
 private:
 
 	//Ä«¸Þ¶ó

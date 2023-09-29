@@ -8,6 +8,8 @@
 class UBVAbilitySystemComponent;
 class UBVAttributeSet;
 class UAbilitySystemComponent;
+class UGameplayAbility;
+class AWeapon;
 
 UCLASS()
 class BLOODVENGEANCE_API ACharacterBase : public ACharacter, public IAbilitySystemInterface
@@ -22,20 +24,33 @@ protected:
 
 protected:
 
-	//GameAbilitySystem
-
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UBVAbilitySystemComponent> AbilitySystemComponent;
+
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UBVAttributeSet> AttributeSet;
 
+private:
 
-	//GameAbilitySystem
+	UPROPERTY(EditAnywhere, Category = "AbilitySystem")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	AWeapon* CurrentWeapon;
+
 
 public:	
 
-
+	UFUNCTION(BlueprintCallable)
 	UBVAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+protected:
+
+	void AddCharacterAbilities();
+
+public:
+
+	AWeapon* GetCurrentWeapon() { return CurrentWeapon; }
 };

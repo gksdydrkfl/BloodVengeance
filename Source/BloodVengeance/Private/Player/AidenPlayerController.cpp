@@ -7,7 +7,8 @@
 #include "BloodVengeance/DebugMacro.h"
 #include "AbilitySystemComponent.h"
 #include "Input/BVEnhancedInputComponent.h"
-
+#include "AbilitySystemBlueprintLibrary.h"
+#include "GAS/BVAbilitySystemComponent.h"
 
 #include "BloodVengeance/DebugMacro.h"
 
@@ -20,31 +21,38 @@ void AAidenPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
+    check(InputMapping);
+
     if (ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(Player))
     {
         if (UEnhancedInputLocalPlayerSubsystem* InputSystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
         {
-            if (!InputMapping.IsNull())
-            {
-                InputSystem->AddMappingContext(InputMapping, 0);
-            }
+            InputSystem->AddMappingContext(InputMapping, 0);
         }
     }
 }
 
 void AAidenPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
-    Debug::Log(*InputTag.ToString());
+    if (GetASC() == nullptr)
+    {
+        return;
+    }
+    GetASC()->AbilityInputTagPressed(InputTag);
 }
 
 void AAidenPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
-    Debug::Log(*InputTag.ToString());
+
 }
 
 void AAidenPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
-    Debug::Log(*InputTag.ToString());
+    if (GetASC() == nullptr)
+    {
+        return;
+    }
+	GetASC()->AbilityInputTagHeld(InputTag);
 }
 
 void AAidenPlayerController::SetupInputComponent()
@@ -52,10 +60,13 @@ void AAidenPlayerController::SetupInputComponent()
     Super::SetupInputComponent();
 
     UBVEnhancedInputComponent* BVEnhancedInputComponent = CastChecked<UBVEnhancedInputComponent>(InputComponent);
-    //UAuraInputComponent* AuraInputComponent = CastChecked<UAuraInputComponent>(InputComponent);
+
     BVEnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAidenPlayerController::Move);
     BVEnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AAidenPlayerController::Look);
-    BVEnhancedInputComponent->BindAbilityActions(InputDataAsset, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
+    BVEnhancedInputComponent->BindAbilityActions(InputDataAsset, this, 
+        &ThisClass::AbilityInputTagPressed,
+        &ThisClass::AbilityInputTagReleased,
+        &ThisClass::AbilityInputTagHeld);
 }
 
 void AAidenPlayerController::OnPossess(APawn* InPawn)
@@ -113,6 +124,15 @@ void AAidenPlayerController::CreateHUDWidget()
 			BVMainHUD->UpdateStaminaBar(BVPlayerState->GetStamina() / BVPlayerState->GetMaxStamina());
 		}
     }
+}
+
+UBVAbilitySystemComponent* AAidenPlayerController::GetASC()
+{
+    if (BVAbilitySystemComponent == nullptr)
+    {
+        BVAbilitySystemComponent = Cast<UBVAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn<APawn>()));
+    }
+    return BVAbilitySystemComponent;
 }
 
 void AAidenPlayerController::OnRep_PlayerState()

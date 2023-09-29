@@ -14,4 +14,14 @@ class BLOODVENGEANCE_API UBVAbilitySystemComponent : public UAbilitySystemCompon
 {
 	GENERATED_BODY()
 	
+public:
+
+	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
+
+	void AbilityInputTagPressed(const FGameplayTag& InputTag);
+
+	void AbilityInputTagHeld(const FGameplayTag& InputTag);
+
+	void AbilityInputTagReleased(const FGameplayTag& InputTag);
 };
+

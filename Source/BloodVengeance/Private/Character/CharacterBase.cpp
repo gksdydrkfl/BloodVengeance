@@ -19,3 +19,11 @@ UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
 	return AbilitySystemComponent.Get();
 }
 
+void ACharacterBase::AddCharacterAbilities()
+{
+	UBVAbilitySystemComponent* ASC = CastChecked<UBVAbilitySystemComponent>(AbilitySystemComponent);
+	if (!HasAuthority()) return;
+
+	ASC->AddCharacterAbilities(StartupAbilities);
+}
+
