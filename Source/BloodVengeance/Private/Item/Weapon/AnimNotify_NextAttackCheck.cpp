@@ -6,5 +6,8 @@ void UAnimNotify_NextAttackCheck::Notify(USkeletalMeshComponent* MeshComp, UAnim
 {
 	Super::Notify(MeshComp, Animation, EventReference);
 
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(), FBVGameplayTags::Get().Montage_NextAttackCheck, FGameplayEventData());
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+		MeshComp->GetOwner(),
+		FBVGameplayTags::Get().Montage_NextAttackCheck, 
+		FGameplayEventData());
 }

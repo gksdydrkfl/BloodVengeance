@@ -53,4 +53,9 @@ protected:
 public:
 
 	AWeapon* GetCurrentWeapon() { return CurrentWeapon; }
+
+
+
+
+	void SetCurrentWeapon(AWeapon* NewWeapon) { CurrentWeapon = NewWeapon; }
 };

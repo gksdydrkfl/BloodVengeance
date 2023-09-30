@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -22,6 +20,8 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attack Properties", meta = (AllowPrivateAccess = true))
 	int32 CurrentCombo;
 
+	//FVector LastLocation;
+
 protected:
 
 public:
@@ -31,6 +31,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ResetCombo();
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateMotionWarping();
 
 private:
 

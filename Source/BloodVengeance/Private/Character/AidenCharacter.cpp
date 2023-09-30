@@ -5,6 +5,8 @@
 #include "Player/BVPlayerState.h"
 #include "GAS/BVAbilitySystemComponent.h"
 #include "Player/AidenPlayerController.h"
+#include "Item/Weapon/Katana/Katana.h"
+#include "MotionWarpingComponent.h"
 
 AAidenCharacter::AAidenCharacter()
 {
@@ -12,7 +14,9 @@ AAidenCharacter::AAidenCharacter()
 	CameraBoom->SetupAttachment(GetMesh());
 	CameraBoom->TargetArmLength = 250.f;
 	CameraBoom->bUsePawnControlRotation = true;
-	CameraBoom->SocketOffset = FVector(0.f, 0.f, 65.f);
+	CameraBoom->SocketOffset = FVector(0.f, 0.f, 45.f);
+	CameraBoom->bEnableCameraLag = true;
+	CameraBoom->CameraLagSpeed = 8.5f;
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom);
@@ -27,6 +31,8 @@ AAidenCharacter::AAidenCharacter()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.f, 0.0f);
+
+	MotionWarping = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarping"));
 
 }
 
@@ -64,7 +70,15 @@ void AAidenCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget, true);
 
+	AWeapon* Katana = GetWorld()->SpawnActor<AKatana>(KatanaClass, FVector::ZeroVector, FRotator::ZeroRotator);
+	if (Katana)
+	{
+		Katana->AttachToComponent(GetMesh(), AttachmentTransformRules, FName("WeaponSocket"));
+	}
+
+	SetCurrentWeapon(Katana);
 }
 
 void AAidenCharacter::InitAbilityActorInfo()

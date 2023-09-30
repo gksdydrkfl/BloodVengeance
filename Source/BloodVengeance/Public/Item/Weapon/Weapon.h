@@ -14,4 +14,14 @@ class BLOODVENGEANCE_API AWeapon : public AItem
 {
 	GENERATED_BODY()
 	
+private:
+
+	float Damage;
+
+public:
+
+	float GetDamage() { return Damage; }
+
+	void SetDamage(const float& NewDamage) { Damage = NewDamage; }
+
 };

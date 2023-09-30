@@ -19,6 +19,7 @@ protected:
 
 private:
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ItemProperties", meta = (AllowPrivateAccess = true))
 	UStaticMeshComponent* ItemMesh;
 
 	FString ItemName;
@@ -28,6 +29,6 @@ private:
 public:
 
 	virtual void SetItemName();
-	virtual void SetItemDesc();
 
+	virtual void SetItemDesc();
 };
