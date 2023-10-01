@@ -24,10 +24,10 @@ protected:
 
 protected:
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY()
 	TObjectPtr<UBVAbilitySystemComponent> AbilitySystemComponent;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY()
 	TObjectPtr<UBVAttributeSet> AttributeSet;
 
 private:
@@ -39,7 +39,7 @@ private:
 	AWeapon* CurrentWeapon;
 
 
-public:	
+public:
 
 	UFUNCTION(BlueprintCallable)
 	UBVAttributeSet* GetAttributeSet() const { return AttributeSet; }
@@ -48,14 +48,14 @@ public:
 
 protected:
 
+	// -- 어빌리티 시스템 --
+	virtual void InitAbilityActorInfo();
 	void AddCharacterAbilities();
+	// -- 어빌리티 시스템 --
 
 public:
 
 	AWeapon* GetCurrentWeapon() { return CurrentWeapon; }
-
-
-
 
 	void SetCurrentWeapon(AWeapon* NewWeapon) { CurrentWeapon = NewWeapon; }
 };

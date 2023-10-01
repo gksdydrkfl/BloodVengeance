@@ -10,8 +10,8 @@ UCLASS()
 class BLOODVENGEANCE_API AItem : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	AItem();
 
 protected:
@@ -25,6 +25,10 @@ private:
 	FString ItemName;
 
 	FString ItemDesc;
+
+protected:
+
+	UStaticMeshComponent* GetItemMesh() { return ItemMesh; }
 
 public:
 

@@ -2,10 +2,7 @@
 
 AItem::AItem()
 {
-	
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMesh"));
-
-	RootComponent = ItemMesh;
 
 	ItemMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
@@ -13,7 +10,7 @@ AItem::AItem()
 void AItem::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 void AItem::SetItemName()

@@ -11,12 +11,16 @@ ACharacterBase::ACharacterBase()
 void ACharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent.Get();
+}
+
+void ACharacterBase::InitAbilityActorInfo()
+{
 }
 
 void ACharacterBase::AddCharacterAbilities()

@@ -54,7 +54,7 @@ float ABVPlayerState::GetMaxStamina() const
 
 void ABVPlayerState::HealthChanged(const FOnAttributeChangeData& Data)
 {
-	float Health = Data.NewValue;
+	const float Health = Data.NewValue;
 
 	AAidenPlayerController* AidenPLayerController = Cast<AAidenPlayerController>(GetOwner());
 	if (AidenPLayerController)
@@ -69,7 +69,7 @@ void ABVPlayerState::HealthChanged(const FOnAttributeChangeData& Data)
 
 void ABVPlayerState::MaxHealthChanged(const FOnAttributeChangeData& Data)
 {
-	float Health = Data.NewValue;
+	const float Health = Data.NewValue;
 
 	AAidenPlayerController* AidenPLayerController = Cast<AAidenPlayerController>(GetOwner());
 	if (AidenPLayerController)
@@ -84,7 +84,7 @@ void ABVPlayerState::MaxHealthChanged(const FOnAttributeChangeData& Data)
 
 void ABVPlayerState::StaminaChanged(const FOnAttributeChangeData& Data)
 {
-	float Stamina = Data.NewValue;
+	const float Stamina = Data.NewValue;
 
 	AAidenPlayerController* AidenPLayerController = Cast<AAidenPlayerController>(GetOwner());
 	if (AidenPLayerController)
@@ -99,7 +99,7 @@ void ABVPlayerState::StaminaChanged(const FOnAttributeChangeData& Data)
 
 void ABVPlayerState::MaxStaminaChanged(const FOnAttributeChangeData& Data)
 {
-	float Stamina = Data.NewValue;
+	const float Stamina = Data.NewValue;
 
 	AAidenPlayerController* AidenPLayerController = Cast<AAidenPlayerController>(GetOwner());
 	if (AidenPLayerController)

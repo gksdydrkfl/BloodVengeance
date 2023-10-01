@@ -1,8 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "GAS/BVAttributeSet.h"
 #include "Net/UnrealNetwork.h"
+#include "BloodVengeance/DebugMacro.h"
+#include "GameplayEffectExtension.h"
 
 UBVAttributeSet::UBVAttributeSet()
 {
@@ -10,6 +9,46 @@ UBVAttributeSet::UBVAttributeSet()
 	InitMaxHealth(100.f);
 	InitStamina(100.f);
 	InitMaxStamina(100.f);
+}
+
+void UBVAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const
+{
+	if (Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
+	{
+		Props.TargetAvatarActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
+	}
+}
+
+void UBVAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+
+	FEffectProperties Props;
+	SetEffectProperties(Data, Props);
+
+	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
+	}
+	if (Data.EvaluatedData.Attribute == GetStaminaAttribute())
+	{
+		SetStamina(FMath::Clamp(GetStamina(), 0.f, GetMaxStamina()));
+	}
+
+}
+
+void UBVAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+
+	if (Attribute == GetHealthAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
+	}
+	if (Attribute == GetStaminaAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxStamina());
+	}
 }
 
 void UBVAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -25,6 +64,8 @@ void UBVAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 void UBVAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UBVAttributeSet, Health, OldHealth);
+
+	Debug::Log("2");
 }
 
 void UBVAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth) const

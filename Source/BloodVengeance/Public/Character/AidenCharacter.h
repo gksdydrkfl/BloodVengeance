@@ -13,7 +13,7 @@ UCLASS()
 class BLOODVENGEANCE_API AAidenCharacter : public ACharacterBase
 {
 	GENERATED_BODY()
-	
+
 public:
 
 	AAidenCharacter();
@@ -33,25 +33,23 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = true))
 	TObjectPtr<UCameraComponent> FollowCamera;
 	// -- 카메라 --
-	
-	
-	
+
+
+
 	// -- 무기 관련 --
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AItem> KatanaClass;
 
 	// -- 무기 관련 --
-	
+
 	// -- 모션 워핑 --
 	UMotionWarpingComponent* MotionWarping;
 	// -- 모션 워핑--
 
 private:
 
-	// -- 어빌리티 시스템 --
-	void InitAbilityActorInfo();
-	// -- 어빌리티 시스템 --
+	virtual void InitAbilityActorInfo() override;
 
 public:
 
