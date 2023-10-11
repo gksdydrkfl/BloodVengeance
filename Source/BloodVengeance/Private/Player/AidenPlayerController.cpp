@@ -9,6 +9,7 @@
 #include "Input/BVEnhancedInputComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GAS/BVAbilitySystemComponent.h"
+#include "Character/AidenCharacter.h"
 
 #include "BloodVengeance/DebugMacro.h"
 
@@ -63,6 +64,9 @@ void AAidenPlayerController::SetupInputComponent()
 
     BVEnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAidenPlayerController::Move);
     BVEnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AAidenPlayerController::Look);
+    BVEnhancedInputComponent->BindAction(LockOnAction, ETriggerEvent::Triggered, this, &AAidenPlayerController::LockOn);
+
+
     BVEnhancedInputComponent->BindAbilityActions(InputDataAsset, this, 
         &ThisClass::AbilityInputTagPressed,
         &ThisClass::AbilityInputTagReleased,
@@ -106,6 +110,26 @@ void AAidenPlayerController::Look(const FInputActionValue& Value)
     {
         PlayerPawn->AddControllerYawInput(LookAxisVector.X);
         PlayerPawn->AddControllerPitchInput(LookAxisVector.Y);
+    }
+}
+
+void AAidenPlayerController::LockOn(const FInputActionValue& Value)
+{
+    APawn* PlayerPawn = GetPawn<APawn>();
+    if (PlayerPawn)
+    {
+        AAidenCharacter* AidenCharacter = Cast<AAidenCharacter>(PlayerPawn);
+        if (AidenCharacter)
+        {
+            if (AidenCharacter->GetTartgetLock())
+            {
+                AidenCharacter->TargetLockOff();
+            }
+            else
+            {
+                AidenCharacter->TargetLockOn();
+            }
+        }
     }
 }
 

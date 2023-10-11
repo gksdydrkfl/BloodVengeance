@@ -66,6 +66,11 @@ void UKatanaBaseAttack::UpdateMotionWarping()
 
 	if (AidenCharacter)
 	{
+		if (AidenCharacter->GetTartgetLock())
+		{
+			return;
+		}
+
 		UMotionWarpingComponent* MotionWarping = AidenCharacter->GetMotionWarping();
 
 		if (MotionWarping)
@@ -77,12 +82,9 @@ void UKatanaBaseAttack::UpdateMotionWarping()
 				MotionWarping->RemoveWarpTarget(FName("TargetWarp"));
 				return;
 			}
-
 			const FVector Location = AidenCharacter->GetActorLocation();
-			const FVector TargetLocation = (LastLocation.GetSafeNormal() * 100.f) + Location;
-
+			const FVector TargetLocation = (LastLocation.GetSafeNormal() * 150.f) + Location;
 			MotionWarping->AddOrUpdateWarpTargetFromLocation(FName("TargetWarp"), TargetLocation);
-
 		}
 	}
 }

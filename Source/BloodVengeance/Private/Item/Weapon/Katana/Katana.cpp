@@ -7,7 +7,7 @@
 AKatana::AKatana()
 {
 	CurrentCombo = 0;
-	MaxCombo = 3;
+	MaxCombo = 4;
 
 	WeaponCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("WeaponCollision"));
 	WeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -33,7 +33,6 @@ void AKatana::SetCurrentCombo(int32 NewValue)
 
 void AKatana::WeaponCollisionOverlap(class UPrimitiveComponent* OnmComponentBeginVerlap, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	Debug::Log(*OtherComp->GetName());
 	if (HasAuthority())
 	{
 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))

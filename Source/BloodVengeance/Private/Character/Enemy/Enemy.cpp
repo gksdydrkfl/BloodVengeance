@@ -1,4 +1,3 @@
-
 #include "Character/Enemy/Enemy.h"
 #include "GAS/BVAbilitySystemComponent.h"
 #include "GAS/BVAttributeSet.h"
@@ -27,8 +26,6 @@ void AEnemy::BeginPlay()
 
 	InitAbilityActorInfo();
 
-	//HealthBar->InitWidget();
-
 	UBVAttributeSet* Attribute = Cast<UBVAttributeSet>(AttributeSet);
 	if (Attribute)
 	{
@@ -52,4 +49,9 @@ void AEnemy::HealthChanged(const FOnAttributeChangeData& Data)
 	{
 		HealthBarWidget->UpdateHealthBar(Health / AttributeSet->GetMaxHealth());
 	}
+}
+
+bool AEnemy::IsTargetable()
+{
+	return true;
 }

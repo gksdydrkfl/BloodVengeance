@@ -3,12 +3,13 @@
 #include "CoreMinimal.h"
 #include "Character/CharacterBase.h"
 #include "GameplayEffectTypes.h"
+#include "TargetSystem/TargetSystemInterface.h"
 #include "Enemy.generated.h"
 
 class UWidgetComponent;
 
 UCLASS()
-class BLOODVENGEANCE_API AEnemy : public ACharacterBase
+class BLOODVENGEANCE_API AEnemy : public ACharacterBase, public ITargetSystemInterface
 {
 	GENERATED_BODY()
 
@@ -27,12 +28,15 @@ private:
 protected:
 
 	FDelegateHandle HealthChangedDelegateHandle;
-	FDelegateHandle MaxHealthChangedDelegateHandle;
 
 private:
 
 	virtual void InitAbilityActorInfo() override;
 
 	void HealthChanged(const FOnAttributeChangeData& Data);
+
+public:
+
+	bool IsTargetable() override;
 
 };

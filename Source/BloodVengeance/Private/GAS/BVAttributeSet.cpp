@@ -34,7 +34,9 @@ void UBVAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 	{
 		SetStamina(FMath::Clamp(GetStamina(), 0.f, GetMaxStamina()));
 	}
-
+	
+	FString Str = FString::Printf(TEXT("Grux : %f"), GetHealth());
+	Debug::Log(Str);
 }
 
 void UBVAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)

@@ -7,6 +7,7 @@
 #include "Player/AidenPlayerController.h"
 #include "Item/Weapon/Katana/Katana.h"
 #include "MotionWarpingComponent.h"
+#include "TargetSystem/TargetSystemComponent.h"
 
 AAidenCharacter::AAidenCharacter()
 {
@@ -31,9 +32,11 @@ AAidenCharacter::AAidenCharacter()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.f, 0.0f);
+	GetCharacterMovement()->MaxWalkSpeed = 400.f;
 
 	MotionWarping = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarping"));
 
+	TargetSystem = CreateDefaultSubobject<UTargetSystemComponent>(TEXT("TargetSystem"));
 }
 
 void AAidenCharacter::PossessedBy(AController* NewController)
@@ -92,5 +95,30 @@ void AAidenCharacter::InitAbilityActorInfo()
 		AbilitySystemComponent = Cast<UBVAbilitySystemComponent>(BVPlayerState->GetAbilitySystemComponent());
 
 		AttributeSet = BVPlayerState->GetAttributeSet();
+	}
+}
+
+bool AAidenCharacter::GetTartgetLock()
+{
+	if (TargetSystem)
+	{
+		return TargetSystem->GetTargetLock();
+	}
+	return false;
+}
+
+void AAidenCharacter::TargetLockOn()
+{
+	if (TargetSystem)
+	{
+		TargetSystem->TargetLockOn();
+	}
+}
+
+void AAidenCharacter::TargetLockOff()
+{
+	if (TargetSystem)
+	{
+		TargetSystem->TargetLockOff();
 	}
 }

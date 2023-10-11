@@ -1,6 +1,8 @@
 #include "Animation/AidenAnimInstance.h"
 #include "Character/AidenCharacter.h"
 #include "BloodVengeance/DebugMacro.h"
+#include "KismetAnimationLibrary.h"
+
 UAidenAnimInstance::UAidenAnimInstance()
 {
 
@@ -29,4 +31,6 @@ void UAidenAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	FVector Velocity = Aiden->GetVelocity();
 	Velocity.Z = 0.f;
 	Speed = Velocity.Size();
+
+	Direction = UKismetAnimationLibrary::CalculateDirection(Velocity, Aiden->GetActorRotation());
 }

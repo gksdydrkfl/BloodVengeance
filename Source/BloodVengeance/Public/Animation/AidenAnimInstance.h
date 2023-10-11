@@ -25,6 +25,8 @@ private:
 	AAidenCharacter* Aiden;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = true))
-	float Speed = 0.f;
+	float Speed;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = true))
+	float Direction;
 };

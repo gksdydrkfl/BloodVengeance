@@ -4,8 +4,6 @@
 void UEnemyHealthBarWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	//HealthBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("HealthBar")));
 }
 
 void UEnemyHealthBarWidget::UpdateHealthBar(const float& NewValue)
