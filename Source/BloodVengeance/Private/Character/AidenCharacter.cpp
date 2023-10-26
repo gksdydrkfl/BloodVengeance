@@ -8,11 +8,14 @@
 #include "Item/Weapon/Katana/Katana.h"
 #include "MotionWarpingComponent.h"
 #include "TargetSystem/TargetSystemComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "GroomComponent.h"
 
 AAidenCharacter::AAidenCharacter()
 {
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(GetMesh());
+	CameraBoom->SetRelativeLocation(FVector(0.f, 0.f, 130.f));
 	CameraBoom->TargetArmLength = 250.f;
 	CameraBoom->bUsePawnControlRotation = true;
 	CameraBoom->SocketOffset = FVector(0.f, 0.f, 45.f);
@@ -32,11 +35,44 @@ AAidenCharacter::AAidenCharacter()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.f, 0.0f);
-	GetCharacterMovement()->MaxWalkSpeed = 400.f;
+	GetCharacterMovement()->MaxWalkSpeed = 150.f;
+	//GetCharacterMovement()->MaxWalkSpeed = 400.f;
 
 	MotionWarping = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarping"));
 
 	TargetSystem = CreateDefaultSubobject<UTargetSystemComponent>(TEXT("TargetSystem"));
+
+	Face = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Face"));
+	Face->SetupAttachment(GetMesh());
+	//EnableMasterPose(Face);
+
+	Legs = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Legs"));
+	Legs->SetupAttachment(GetMesh());
+
+	Torso = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Torso"));
+	Torso->SetupAttachment(GetMesh());
+
+	Feet = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Feet"));
+	Feet->SetupAttachment(GetMesh());
+
+	Eyebrows = CreateDefaultSubobject<UGroomComponent>(TEXT("Eyebrows"));
+	Eyebrows->SetupAttachment(Face);
+	Eyebrows->AttachmentName = FString("head");
+
+	Hair = CreateDefaultSubobject<UGroomComponent>(TEXT("Hair"));
+	Hair->SetupAttachment(Face);
+	Hair->AttachmentName = FString("head");
+
+	Mustache = CreateDefaultSubobject<UGroomComponent>(TEXT("Mustache"));
+	Mustache->SetupAttachment(Face);
+	Mustache->AttachmentName = FString("head");
+
+	Beard = CreateDefaultSubobject<UGroomComponent>(TEXT("Beard"));
+	Beard->SetupAttachment(Face);
+	Beard->AttachmentName = FString("head");
+
+
+	
 }
 
 void AAidenCharacter::PossessedBy(AController* NewController)
@@ -96,6 +132,8 @@ void AAidenCharacter::InitAbilityActorInfo()
 
 		AttributeSet = BVPlayerState->GetAttributeSet();
 	}
+
+	InitializeDefaultAttributes();
 }
 
 bool AAidenCharacter::GetTartgetLock()
@@ -112,6 +150,8 @@ void AAidenCharacter::TargetLockOn()
 	if (TargetSystem)
 	{
 		TargetSystem->TargetLockOn();
+
+		GetCharacterMovement()->MaxWalkSpeed = 200.f;
 	}
 }
 
@@ -120,5 +160,32 @@ void AAidenCharacter::TargetLockOff()
 	if (TargetSystem)
 	{
 		TargetSystem->TargetLockOff();
+
+		GetCharacterMovement()->MaxWalkSpeed = 400.f;
+	}
+}
+
+void AAidenCharacter::EnableMasterPose(USkeletalMeshComponent* SkeletalMeshComponent)
+{
+	if (SkeletalMeshComponent == nullptr)
+	{
+		return;
+	}
+
+	USkeletalMesh* SkeletalMesh = SkeletalMeshComponent->GetSkeletalMeshAsset();
+
+	if (SkeletalMesh)
+	{
+		TSubclassOf<UAnimInstance> PostProcessAnimBlueprint = SkeletalMesh->PostProcessAnimBlueprint;
+		TSubclassOf<UAnimInstance> AnimClass = SkeletalMeshComponent->AnimClass;
+
+		if(IsValid(PostProcessAnimBlueprint) && IsValid(AnimClass))
+		{
+			return;
+		}
+		else
+		{
+			SkeletalMeshComponent->SetLeaderPoseComponent(GetMesh());
+		}
 	}
 }

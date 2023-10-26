@@ -8,9 +8,10 @@ public class BloodVengeance : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput",
-			"GameplayAbilities", "GameplayTags", "GameplayTasks",
-            "MotionWarping", "AnimGraphRuntime"});
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "Niagara", "AIModule"
+
+            "GameplayAbilities", "GameplayTags", "GameplayTasks",
+            "MotionWarping", "AnimGraphRuntime", "HairStrandsCore"});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

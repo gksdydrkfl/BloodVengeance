@@ -14,10 +14,13 @@ class BLOODVENGEANCE_API UBVGameplayAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
 	
-private:
+protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	FGameplayTag StartupInputTag;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	FScalableFloat Damage;
 
 public:
 

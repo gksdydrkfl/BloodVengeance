@@ -11,14 +11,41 @@
 		GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 		GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FHealthDeathEvent, AActor*, OwningActor);
+
 USTRUCT()
 struct FEffectProperties
 {
 public:
 	GENERATED_BODY()
 
+	FEffectProperties() {}
+
+	FGameplayEffectContextHandle EffectContextHandle;
+
+	UPROPERTY()
+	UAbilitySystemComponent* SourceASC = nullptr;
+
+	UPROPERTY()
+	AActor* SourceAvatarActor = nullptr;
+
+	UPROPERTY()
+	AController* SourceController = nullptr;
+
+	UPROPERTY()
+	ACharacter* SourceCharacter = nullptr;
+
+	UPROPERTY()
+	UAbilitySystemComponent* TargetASC = nullptr;
+
 	UPROPERTY()
 	AActor* TargetAvatarActor = nullptr;
+
+	UPROPERTY()
+	AController* TargetController = nullptr;
+
+	UPROPERTY()
+	ACharacter* TargetCharacter = nullptr;
 };
 
 UCLASS()
@@ -54,7 +81,9 @@ public:
 	FGameplayAttributeData MaxStamina;
 	ATTRIBUTE_ACCESSORS(UBVAttributeSet, MaxStamina);
 
-
+	UPROPERTY(BlueprintReadOnly, Category = "Meta Data")
+	FGameplayAttributeData InComingDamage;
+	ATTRIBUTE_ACCESSORS(UBVAttributeSet, InComingDamage);
 
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldHealth) const;
@@ -67,4 +96,7 @@ public:
 
 	UFUNCTION()
 	void OnRep_MaxStamina(const FGameplayAttributeData& OldMaxStamina) const;
+
+	UPROPERTY()
+	FHealthDeathEvent OnDeathStarted;
 };

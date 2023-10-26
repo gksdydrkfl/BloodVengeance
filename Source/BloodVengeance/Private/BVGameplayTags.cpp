@@ -14,4 +14,12 @@ void FBVGameplayTags::InitGameplayTags()
 	GameplayTags.Montage_NextAttackCheck = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.NextAttackCheck"), FString("Can Next Attack Check"));
 
 	GameplayTags.Montage_EndAttackCheck = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.EndAttackCheck"), FString("End Attack Check"));
+
+	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage"), FString("Damage"));
+
+	GameplayTags.Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Effects.HitReact"), FString("HitReact"));
+
+	GameplayTags.Effects_Death = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Effects.Death"), FString("Death"));
+
+	
 }

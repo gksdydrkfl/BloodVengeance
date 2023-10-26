@@ -9,6 +9,7 @@ class UCameraComponent;
 class AItem;
 class UMotionWarpingComponent;
 class UTargetSystemComponent;
+class UGroomComponent;
 
 UCLASS()
 class BLOODVENGEANCE_API AAidenCharacter : public ACharacterBase
@@ -27,6 +28,18 @@ public:
 
 private:
 
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh", meta = (AllowPrivateAccess = true))
+	USkeletalMeshComponent* Face;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh", meta = (AllowPrivateAccess = true))
+	USkeletalMeshComponent* Legs;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh", meta = (AllowPrivateAccess = true))
+	USkeletalMeshComponent* Torso;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh", meta = (AllowPrivateAccess = true))
+	USkeletalMeshComponent* Feet;
+
+
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = true))
 	TObjectPtr<USpringArmComponent> CameraBoom;
 
@@ -43,6 +56,14 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TargetSystem", meta = (AllowPrivateAccess = true))
 	UTargetSystemComponent* TargetSystem;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Groom", meta = (AllowPrivateAccess = true))
+	UGroomComponent* Eyebrows;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Groom", meta = (AllowPrivateAccess = true))
+	UGroomComponent* Hair;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Groom", meta = (AllowPrivateAccess = true))
+	UGroomComponent* Mustache;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Groom", meta = (AllowPrivateAccess = true))
+	UGroomComponent* Beard;
 
 private:
 
@@ -55,5 +76,8 @@ public:
 	bool GetTartgetLock();
 	void TargetLockOn();
 	void TargetLockOff();
+	
+	UFUNCTION(BlueprintCallable)
+	void EnableMasterPose(USkeletalMeshComponent* SkeletalMeshComponent);
 
 };

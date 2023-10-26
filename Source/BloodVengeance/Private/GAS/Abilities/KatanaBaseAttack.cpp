@@ -6,7 +6,9 @@
 #include "MotionWarpingComponent.h"
 #include "BloodVengeance/DebugMacro.h"
 #include "AbilitySystemComponent.h"
+#include "BVGameplayTags.h"
 
+#include "BloodVengeance/DebugMacro.h"
 UKatanaBaseAttack::UKatanaBaseAttack()
 {
 
@@ -16,12 +18,16 @@ void UKatanaBaseAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	//TODO 나중에 블루프린트 내용 C++로 다운그레이드
-
 }
 
 void UKatanaBaseAttack::BaseAttack()
 {
 	AKatana* Katana = GetKatana();
+
+	if (Katana == nullptr)
+	{
+		return;
+	}
 
 	CurrentCombo = (Katana->GetCurrentCombo() % Katana->GetMaxCombo()) + 1;
 
@@ -29,6 +35,13 @@ void UKatanaBaseAttack::BaseAttack()
 
 	const UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
 	const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), ASC->MakeEffectContext());
+	
+	FBVGameplayTags GameplayTags = FBVGameplayTags::Get();
+
+	const float ScaledDamage = Damage.GetValueAtLevel(CurrentCombo);
+
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Damage, ScaledDamage);
+
 	Katana->SetDamageEffectSpecHandle(SpecHandle);
 }
 
