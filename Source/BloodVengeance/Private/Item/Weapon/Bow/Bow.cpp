@@ -1,0 +1,12 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "Item/Weapon/Bow/Bow.h"
+
+ABow::ABow()
+{
+	ItemSkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ItemSkeletalMesh"));
+	ItemSkeletalMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	RootComponent = ItemSkeletalMesh;
+}

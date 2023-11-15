@@ -2,9 +2,9 @@
 
 AItem::AItem()
 {
-	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMesh"));
+	ItemStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMesh"));
 
-	ItemMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	ItemStaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AItem::BeginPlay()

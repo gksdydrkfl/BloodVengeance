@@ -1,17 +1,24 @@
 #include "Character/CharacterBase.h"
 #include "GAS/BVAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Item/Weapon/Katana/Katana.h"
+#include "Item/Weapon/Bow/Bow.h"
+#include "Item/Weapon/Arrow/Arrow.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 ACharacterBase::ACharacterBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	bIsEquipped = false;
 
+	GetMesh()->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -88.f), FRotator(0.f, -90.f, 0.f));
 }
 
 void ACharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
+
 }
 
 UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
@@ -46,24 +53,42 @@ void ACharacterBase::InitializeDefaultAttributes() const
 	ApplyEffectToSelf(DefaultVitalAttirbutes, 1.f);
 }
 
-UAnimMontage* ACharacterBase::GetHitReactMontage_Implementation()
-{
-	return HitReactMontage;
-}
+//UAnimMontage* ACharacterBase::GetHitReactMontage_Implementation()
+//{
+//	return HitReactMontage;
+//}
 
 //UAnimMontage* ACharacterBase::GetDeathMontage_Implementation()
 //{
 //	return DeathMontage;
 //}
 
-UAnimMontage* ACharacterBase::GetDeathMontage()
-{
-	return DeathMontage;
-}
+//UAnimMontage* ACharacterBase::GetDeathMontage()
+//{
+//	return DeathMontage;
+//}
+
 
 void ACharacterBase::Die()
 {
 	MulticastHandleDeath();
+}
+
+void ACharacterBase::SetADS(const bool& Value)
+{
+	bIsADS = Value;
+
+	GetCharacterMovement()->bOrientRotationToMovement = !Value;
+	if (Value)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = 150.f;
+	}
+	else
+	{
+		GetCharacterMovement()->MaxWalkSpeed = 600.f;
+	}
+
+	bUseControllerRotationYaw = Value;
 }
 
 void ACharacterBase::MulticastHandleDeath_Implementation()
@@ -76,3 +101,11 @@ void ACharacterBase::MulticastHandleDeath_Implementation()
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+void ACharacterBase::DestroyArrow()
+{
+	if (Arrow)
+	{
+		Arrow->Destroy();
+		Arrow = nullptr;
+	}
+}

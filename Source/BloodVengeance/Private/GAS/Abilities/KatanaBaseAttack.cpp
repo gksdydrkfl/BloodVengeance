@@ -11,24 +11,18 @@
 #include "BloodVengeance/DebugMacro.h"
 UKatanaBaseAttack::UKatanaBaseAttack()
 {
-
+	Katana = nullptr;
 }
 
 void UKatanaBaseAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	//TODO 나중에 블루프린트 내용 C++로 다운그레이드
+
 }
 
 void UKatanaBaseAttack::BaseAttack()
 {
-	AKatana* Katana = GetKatana();
-
-	if (Katana == nullptr)
-	{
-		return;
-	}
-
 	CurrentCombo = (Katana->GetCurrentCombo() % Katana->GetMaxCombo()) + 1;
 
 	Katana->SetCurrentCombo(CurrentCombo);
@@ -47,7 +41,12 @@ void UKatanaBaseAttack::BaseAttack()
 
 void UKatanaBaseAttack::ResetCombo()
 {
-	AKatana* Katana = GetKatana();
+	Katana = GetKatana();
+
+	if (Katana == nullptr)
+	{
+		return;
+	}
 
 	Katana->ResetCombo();
 }
@@ -63,7 +62,7 @@ AKatana* UKatanaBaseAttack::GetKatana()
 		return nullptr;
 	}
 
-	AKatana* Katana = Cast<AKatana>(Weapon);
+	Katana = Cast<AKatana>(Weapon);
 
 	if (Katana == nullptr)
 	{

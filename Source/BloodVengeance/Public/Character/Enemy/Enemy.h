@@ -8,6 +8,10 @@
 #include "Enemy.generated.h"
 
 class UWidgetComponent;
+class ABVAIController;
+class APatrolRoute;
+struct FGameplayTagContainer;
+class UBehaviorTree;
 
 UCLASS()
 class BLOODVENGEANCE_API AEnemy : public ACharacterBase, public ITargetSystemInterface
@@ -20,6 +24,7 @@ public:
 
 	virtual void BeginPlay() override;
 
+	virtual void PossessedBy(AController* NewController) override;
 
 private:
 
@@ -29,8 +34,8 @@ private:
 	UPROPERTY(BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = true))
 	bool bHitReacting;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = true))
-	float BaseWalkSpeed = 250.f;
+	/*UPROPERTY(BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = true))
+	float BaseWalkSpeed = 250.f;*/
 
 	UPROPERTY(EditAnywhere, Category = "Character Class Defaults", meta = (AllowPrivateAccess = true))
 	int32 Level;
@@ -38,17 +43,25 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Character Class Defaults", meta = (AllowPrivateAccess = true))
 	ECharacterClass CharacterClass;
 
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	float LifeSpan = 5.f;
+	UPROPERTY(EditAnywhere, Category = "AI", meta = (AllowPrivateAccess = true))
+	TObjectPtr<ABVAIController> BVAIController;
 
-	bool bDeath;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI", meta = (AllowPrivateAccess = true))
+	TObjectPtr<APatrolRoute> PatrolRoute;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI", meta = (AllowPrivateAccess = true))
+	TObjectPtr<UBehaviorTree> EnemyBehaviorTree;
 
 protected:
 
+	float DefaultAttackRadius;
+
+	float AttackRadius;
+
 	FDelegateHandle HealthChangedDelegateHandle;
 
-	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
-	void DeathTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+	FGameplayTagContainer AttackTag;
+
 
 private:
 
@@ -67,4 +80,21 @@ public:
 	UFUNCTION()
 	void OnDeathStarted(AActor* NewActor);
 
+	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+
+	UFUNCTION(BlueprintCallable)
+	void SetMovementSpeed(const EAIMovementState& NewAIState);
+
+	ECharacterClass GetCharacterClass() const { return CharacterClass; }
+	void SetCharacterClass(const ECharacterClass& NewCharacterClass) { CharacterClass = NewCharacterClass; }
+
+	float GetDefaultAttackRadius() const { return DefaultAttackRadius; }
+	float GetAttackRadius() const { return AttackRadius; }
+
+	UFUNCTION(BlueprintCallable)
+	FGameplayTagContainer GetAttackTag() const { return AttackTag; }
+
+	UBehaviorTree* GetEnemyBehaviorTree() const { return EnemyBehaviorTree; }
+
 };
+

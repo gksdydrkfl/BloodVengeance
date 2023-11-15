@@ -66,7 +66,7 @@ UAidenAnimInstance::UAidenAnimInstance()
 
 	bIsFalling = false;
 
-	UpperBodyDynamicAddtiveWeight = 0.f;
+	UpperbodyDynamicAdditiveWeight = 0.f;
 
 	RootYawOffsetMode = ERootYawOffsetMode::RYOM_BlendOut;
 
@@ -126,6 +126,10 @@ void UAidenAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	Direction = UKismetAnimationLibrary::CalculateDirection(Velocity, Aiden->GetActorRotation());
 
 	bTargetLock = GetTargetLock();
+
+	bIsADS = Aiden->GetADS();
+
+	UpdateMovementAngle();
 
 	UpdateLocationData(DeltaSeconds);
 
@@ -246,6 +250,30 @@ void UAidenAnimInstance::SetRootYawOffset(const float& InRootYawOffset)
 void UAidenAnimInstance::SetupStartState()
 {
 	StartDirection = LocalVelocityDirection;
+}
+
+void UAidenAnimInstance::UpdateMovementAngle()
+{
+	const FRotator BaseAimRotation = Aiden->GetBaseAimRotation();
+	const FRotator VelocityRotation = UKismetMathLibrary::MakeRotFromX(Aiden->GetVelocity());
+	JogAngle = UKismetMathLibrary::NormalizedDeltaRotator(VelocityRotation, BaseAimRotation).Yaw;
+
+	if (UKismetMathLibrary::InRange_FloatFloat(-180.f, -135.f, true, false))
+	{
+		PivotJogAngleDirection = EAnimEnumCardinalTurnDirection::AECD_Left_180;
+	}
+	else if (UKismetMathLibrary::InRange_FloatFloat(-135.f, -45.f, true, false))
+	{
+		PivotJogAngleDirection = EAnimEnumCardinalTurnDirection::AECD_Left_90;
+	}
+	else if (UKismetMathLibrary::InRange_FloatFloat(45.f, 135.f, false, true))
+	{
+		PivotJogAngleDirection = EAnimEnumCardinalTurnDirection::AECD_Right_90;
+	}
+	else
+	{
+		PivotJogAngleDirection = EAnimEnumCardinalTurnDirection::AECD_Right_180;
+	}
 }
 
 void UAidenAnimInstance::UpdateLocationData(const float& DeltaTime)
@@ -394,9 +422,9 @@ void UAidenAnimInstance::UpdateCharacterState(const float& DeltaTime)
 
 void UAidenAnimInstance::UpdateBlendWeightData(const float& DeltaTime)
 {
-	bool bSelect = IsAnyMontagePlaying() && bIsOnGround ? true : false;
+	bool bSelect = (IsAnyMontagePlaying() && bIsOnGround) ? true : false;
 
-	UpperBodyDynamicAddtiveWeight = UKismetMathLibrary::SelectFloat(1.f, UKismetMathLibrary::FInterpTo(UpperBodyDynamicAddtiveWeight, 0.f, DeltaTime, 6.f), bSelect);
+	UpperbodyDynamicAdditiveWeight = UKismetMathLibrary::SelectFloat(1.f, FMath::FInterpTo(UpperbodyDynamicAdditiveWeight, 0.f, DeltaTime, 6.f), bSelect);
 }
 
 void UAidenAnimInstance::UpdateRootYawOffset(const float& DeltaTime)

@@ -35,4 +35,5 @@ public:
 	void UpdateHealthBar(const float& NewValue);
 	void UpdateStaminaBar(const float& NewValue);
 
+	UMainGameplayWidget* GetMainGameplayWidget() const { return MainGameplayWidget; }
 };

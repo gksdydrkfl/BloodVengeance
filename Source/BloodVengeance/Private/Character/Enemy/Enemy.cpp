@@ -6,6 +6,11 @@
 #include "BVGameplayTags.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GAS/BVBlueprintFunctionLibrary.h"
+#include "Item/Weapon/Katana/Katana.h"
+#include "Item/Weapon/Bow/Bow.h"
+#include "AI/AIState.h"
+
+//#include "AI/PatrolRoute.h"
 
 #include "BloodVengeance/DebugMacro.h"
 
@@ -25,7 +30,11 @@ AEnemy::AEnemy()
 
 	bHitReacting = false;
 
-	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationRoll = false;
+	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+
 }
 
 void AEnemy::BeginPlay()
@@ -33,7 +42,13 @@ void AEnemy::BeginPlay()
 	Super::BeginPlay();
 
 	InitAbilityActorInfo();
-	UBVBlueprintFunctionLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
+
+	if (AbilitySystemComponent == nullptr)
+	{
+		return;
+	}
+
+	UBVBlueprintFunctionLibrary::GiveStartupAbilities(this, AbilitySystemComponent, CharacterClass);
 
 	UBVAttributeSet* Attribute = Cast<UBVAttributeSet>(AttributeSet);
 	if (Attribute)
@@ -44,25 +59,50 @@ void AEnemy::BeginPlay()
 		AttributeSet->OnDeathStarted.AddDynamic(this, &AEnemy::OnDeathStarted);
 	}
 
-	AbilitySystemComponent->RegisterGameplayTagEvent(FBVGameplayTags::Get().Effects_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AEnemy::HitReactTagChanged);
-	AbilitySystemComponent->RegisterGameplayTagEvent(FBVGameplayTags::Get().Effects_Death, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AEnemy::DeathTagChanged);
+	AbilitySystemComponent->RegisterGameplayTagEvent(FBVGameplayTags::Get().Effects_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(
+		this,
+		&AEnemy::HitReactTagChanged
+	);
+	
+}
 
-	Debug::Log(Attribute->GetHealth());
-	Debug::Log(Attribute->GetMaxHealth());
+void AEnemy::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (!HasAuthority())
+	{
+		return;
+	}
+
 }
 
 void AEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
 	bHitReacting = NewCount > 0;
-
-	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
 }
 
-void AEnemy::DeathTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+void AEnemy::SetMovementSpeed(const EAIMovementState& NewAIState)
 {
-	bDeath = true;
+	float Speed = 0.f;
 
-	GetMesh()->GetAnimInstance()->Montage_Play(GetDeathMontage());
+	switch (NewAIState)
+	{
+	case EAIMovementState::AIMS_Idle:
+		Speed = 0.f;
+		break;
+	case EAIMovementState::AIMS_Walking:
+		Speed = 150.f;
+		break;
+	case EAIMovementState::AIMS_Jogging:
+		Speed = 300.f;
+		break;
+	case EAIMovementState::AIMS_Sprinting:
+		Speed = 500.f;
+		break;
+	}
+
+	GetCharacterMovement()->MaxWalkSpeed = Speed;
 }
 
 void AEnemy::InitAbilityActorInfo()
@@ -108,3 +148,4 @@ void AEnemy::Die()
 	//SetLifeSpan(LifeSpan);
 	Super::Die();
 }
+

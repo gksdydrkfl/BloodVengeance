@@ -7,7 +7,7 @@
 #include "MainGameplayWidget.generated.h"
 
 class UCharacterStatusWidget;
-
+class UCrosshairWidget;
 
 UCLASS()
 class BLOODVENGEANCE_API UMainGameplayWidget : public UUserWidget
@@ -23,9 +23,16 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UCharacterStatusWidget> CharacterStatusWidget;
 
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UCrosshairWidget> CrosshairWidget;
+
 public:
 
 	void UpdateHealthBar(const float& NewValue);
 	void UpdateStaminaBar(const float& NewValue);
+	void SetHiddenCrosshair(const bool& NewValue);
+
+	UCrosshairWidget* GetCrosshairWidget() const { return CrosshairWidget; }
+
 
 };

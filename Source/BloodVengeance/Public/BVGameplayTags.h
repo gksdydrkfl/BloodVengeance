@@ -31,6 +31,9 @@ public:
 	FGameplayTag Effects_HitReact;
 	FGameplayTag Effects_Death;
 
+	FGameplayTag Abilities_KatanaBaseAttack;
+	FGameplayTag Abilities_BowBaseAttack;
+
 protected:
 
 private:

@@ -10,6 +10,12 @@
 #include "TargetSystem/TargetSystemComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GroomComponent.h"
+#include "Item/Weapon/Bow/Bow.h"
+#include "Animation/BowAnimInstance.h"
+#include "Curves/CurveVector.h"
+#include "Item/Weapon/Arrow/Arrow.h"
+
+#include "BloodVengeance/DebugMacro.h"
 
 AAidenCharacter::AAidenCharacter()
 {
@@ -71,7 +77,6 @@ AAidenCharacter::AAidenCharacter()
 	Beard->SetupAttachment(Face);
 	Beard->AttachmentName = FString("head");
 
-
 	
 }
 
@@ -83,7 +88,7 @@ void AAidenCharacter::PossessedBy(AController* NewController)
 
 	AddCharacterAbilities();
 
-	AAidenPlayerController* AidenPlayerController = Cast<AAidenPlayerController>(GetController());
+	AidenPlayerController = Cast<AAidenPlayerController>(GetController());
 
 	if (AidenPlayerController)
 	{
@@ -97,7 +102,7 @@ void AAidenCharacter::OnRep_PlayerState()
 
 	InitAbilityActorInfo();
 
-	AAidenPlayerController* AidenPlayerController = Cast<AAidenPlayerController>(GetController());
+	AidenPlayerController = Cast<AAidenPlayerController>(GetController());
 
 	if (AidenPlayerController)
 	{
@@ -111,13 +116,28 @@ void AAidenCharacter::BeginPlay()
 
 	FAttachmentTransformRules AttachmentTransformRules(EAttachmentRule::SnapToTarget, true);
 
-	AWeapon* Katana = GetWorld()->SpawnActor<AKatana>(KatanaClass, FVector::ZeroVector, FRotator::ZeroRotator);
-	if (Katana)
+	AWeapon* Weapon = GetWorld()->SpawnActor<AKatana>(WeaponClass);
+	if (Weapon)
 	{
-		Katana->AttachToComponent(GetMesh(), AttachmentTransformRules, FName("WeaponSocket"));
+		Weapon->AttachToComponent(GetMesh(), AttachmentTransformRules, FName("EquipKatanaSocket"));
 	}
 
-	SetCurrentWeapon(Katana);
+	ABow* BowWeapon = GetWorld()->SpawnActor<ABow>(BowClass);
+	if (BowWeapon)
+	{
+		BowWeapon->AttachToComponent(GetMesh(), AttachmentTransformRules, FName("EquipBowSocket"));
+		Cast<UBowAnimInstance>(BowWeapon->GetMesh()->GetAnimInstance())->SetCharacterBase(this);
+	}
+	SetCurrentWeapon(BowWeapon);
+
+	SetCallbackADS();
+}
+
+void AAidenCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	ADSTimeline.TickTimeline(DeltaTime);
 }
 
 void AAidenCharacter::InitAbilityActorInfo()
@@ -136,7 +156,7 @@ void AAidenCharacter::InitAbilityActorInfo()
 	InitializeDefaultAttributes();
 }
 
-bool AAidenCharacter::GetTartgetLock()
+bool AAidenCharacter::GetTartgetLock() const
 {
 	if (TargetSystem)
 	{
@@ -188,4 +208,58 @@ void AAidenCharacter::EnableMasterPose(USkeletalMeshComponent* SkeletalMeshCompo
 			SkeletalMeshComponent->SetLeaderPoseComponent(GetMesh());
 		}
 	}
+}
+
+void AAidenCharacter::SetCameraMode(const float& NewFieldOfView, const FVector NewLocation)
+{
+	if (GetADS())
+	{
+		ADSTimeline.PlayFromStart();
+	}
+	else
+	{
+		ADSTimeline.Reverse();
+	}
+}
+
+void AAidenCharacter::SetCallbackADS()
+{
+	if (ADSFloatCurve == nullptr)
+	{
+		return;
+	}
+
+	ADSCallbackFloatUpdate.BindUFunction(this, FName("ADSUpdate"));
+	ADSCallbackVectorUpdate.BindUFunction(this, FName("ADSUpdate"));
+	ADSTimeline.AddInterpFloat(ADSFloatCurve, ADSCallbackFloatUpdate);
+	ADSTimeline.AddInterpVector(ADSFVectorCurve, ADSCallbackVectorUpdate);
+
+	ADSCallbackFinish.BindUFunction(this, FName("ADSFinish"));
+	ADSTimeline.SetTimelineFinishedFunc(ADSCallbackFinish);
+
+	ADSTimeline.SetTimelineLength(ADSTimelineLength);
+}
+
+void AAidenCharacter::ADSUpdate(float NewValue)
+{
+	if (FollowCamera == nullptr)
+	{
+		return;
+	}
+
+	if (CameraBoom == nullptr)
+	{
+		return;
+	}
+
+	const FVector NewOffset = ADSFVectorCurve->GetVectorValue(ADSTimeline.GetPlaybackPosition());
+	CameraBoom->SocketOffset = NewOffset;
+
+	const float NewFieldOfView = ADSFloatCurve->GetFloatValue(ADSTimeline.GetPlaybackPosition());
+	FollowCamera->SetFieldOfView(NewFieldOfView);
+}
+
+void AAidenCharacter::ADSFinish()
+{
+	Debug::Log(FString("Finish"));
 }

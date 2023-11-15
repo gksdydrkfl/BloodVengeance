@@ -44,7 +44,11 @@ void AAidenPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 
 void AAidenPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
-    //TODO
+    if (GetASC() == nullptr)
+    {
+        return;
+    }
+    GetASC()->AbilityInputTagReleased(InputTag);
 }
 
 void AAidenPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)

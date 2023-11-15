@@ -2,14 +2,16 @@
 
 #include "CoreMinimal.h"
 #include "Character/CharacterBase.h"
+#include "Components/TimeLineComponent.h"
 #include "AidenCharacter.generated.h"
 
 class USpringArmComponent;
 class UCameraComponent;
-class AItem;
 class UMotionWarpingComponent;
 class UTargetSystemComponent;
 class UGroomComponent;
+class AWeapon;
+class AAidenPlayerController;
 
 UCLASS()
 class BLOODVENGEANCE_API AAidenCharacter : public ACharacterBase
@@ -26,44 +28,65 @@ public:
 
 	virtual void BeginPlay() override;
 
+	virtual void Tick(float DeltaTime) override;
+
 private:
 
+	AAidenPlayerController* AidenPlayerController;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh", meta = (AllowPrivateAccess = true))
-	USkeletalMeshComponent* Face;
+	TObjectPtr<USkeletalMeshComponent> Face;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh", meta = (AllowPrivateAccess = true))
-	USkeletalMeshComponent* Legs;
+	TObjectPtr<USkeletalMeshComponent> Legs;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh", meta = (AllowPrivateAccess = true))
-	USkeletalMeshComponent* Torso;
+	TObjectPtr<USkeletalMeshComponent> Torso;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh", meta = (AllowPrivateAccess = true))
-	USkeletalMeshComponent* Feet;
+	TObjectPtr<USkeletalMeshComponent> Feet;
 
 
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = true))
 	TObjectPtr<USpringArmComponent> CameraBoom;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = true))
 	TObjectPtr<UCameraComponent> FollowCamera;
 
-
-
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<AItem> KatanaClass;
-
-	UMotionWarpingComponent* MotionWarping;
+	TObjectPtr<UMotionWarpingComponent> MotionWarping;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TargetSystem", meta = (AllowPrivateAccess = true))
-	UTargetSystemComponent* TargetSystem;
+	TObjectPtr<UTargetSystemComponent> TargetSystem;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Groom", meta = (AllowPrivateAccess = true))
-	UGroomComponent* Eyebrows;
+	TObjectPtr<UGroomComponent> Eyebrows;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Groom", meta = (AllowPrivateAccess = true))
-	UGroomComponent* Hair;
+	TObjectPtr<UGroomComponent> Hair;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Groom", meta = (AllowPrivateAccess = true))
-	UGroomComponent* Mustache;
+	TObjectPtr<UGroomComponent> Mustache;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Groom", meta = (AllowPrivateAccess = true))
-	UGroomComponent* Beard;
+	TObjectPtr<UGroomComponent> Beard;
+
+	//TEST
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AWeapon> BowClass;
+	//TEST
+
+	UPROPERTY(EditAnywhere, Category = "ADS", meta = (AllowPrivateAccess = true))
+	TObjectPtr<UCurveFloat> ADSFloatCurve;
+
+	UPROPERTY(EditAnywhere, Category = "ADS", meta = (AllowPrivateAccess = true))
+	TObjectPtr<UCurveVector> ADSFVectorCurve;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ADS", meta = (AllowPrivateAccess = "true"))
+	float ADSTimelineLength;
+
+	FOnTimelineFloat ADSCallbackFloatUpdate;
+	FOnTimelineVector ADSCallbackVectorUpdate;
+
+	FOnTimelineEvent ADSCallbackFinish;
+
+	FTimeline ADSTimeline;
+
+
 
 private:
 
@@ -71,13 +94,24 @@ private:
 
 public:
 
-	UMotionWarpingComponent* GetMotionWarping() { return MotionWarping; }
+	AAidenPlayerController* GetAidenPlayerController() const { return AidenPlayerController; }
 
-	bool GetTartgetLock();
+	UMotionWarpingComponent* GetMotionWarping() const { return MotionWarping; }
+
+	bool GetTartgetLock() const;
 	void TargetLockOn();
 	void TargetLockOff();
 	
 	UFUNCTION(BlueprintCallable)
 	void EnableMasterPose(USkeletalMeshComponent* SkeletalMeshComponent);
+
+	void SetCameraMode(const float& NewFieldOfView, const FVector NewLocation);
+
+	void SetCallbackADS();
+
+	UFUNCTION()
+	void ADSUpdate(float NewValue);
+	UFUNCTION()
+	void ADSFinish();
 
 };

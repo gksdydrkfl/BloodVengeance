@@ -24,6 +24,8 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
 
+	AKatana* Katana;
+
 protected:
 
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData);
@@ -40,10 +42,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpdateMotionWarping();
 
-private:
-
+	UFUNCTION(BlueprintCallable)
 	AKatana* GetKatana();
-
-
 
 };

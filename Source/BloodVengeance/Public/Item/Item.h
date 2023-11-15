@@ -20,7 +20,7 @@ protected:
 private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ItemProperties", meta = (AllowPrivateAccess = true))
-	UStaticMeshComponent* ItemMesh;
+	UStaticMeshComponent* ItemStaticMesh;
 
 	FString ItemName;
 
@@ -28,7 +28,7 @@ private:
 
 protected:
 
-	UStaticMeshComponent* GetItemMesh() { return ItemMesh; }
+	UStaticMeshComponent* GetItemMesh() { return ItemStaticMesh; }
 
 public:
 

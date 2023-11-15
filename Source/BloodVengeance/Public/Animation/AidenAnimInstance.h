@@ -24,6 +24,15 @@ enum class EAnimEnumCardinalDirection : uint8
 	AECD_Right		UMETA(DisplayName = "Right")
 };
 
+UENUM(BlueprintType)
+enum class EAnimEnumCardinalTurnDirection : uint8
+{
+	AECD_Left_180	UMETA(DisplayName = "Left_180"),
+	AECD_Left_90	UMETA(DisplayName = "Left_90"),
+	AECD_Right_180	UMETA(DisplayName = "Right_180"),
+	AECD_Right_90	UMETA(DisplayName = "Right_90")
+};
+
 UCLASS()
 class BLOODVENGEANCE_API UAidenAnimInstance : public UAnimInstance
 {
@@ -145,7 +154,7 @@ private:
 	bool bIsFalling;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character State Data", meta = (AllowPrivateAccess = true))
-	float UpperBodyDynamicAddtiveWeight;
+	float UpperbodyDynamicAdditiveWeight;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Turn In Place", meta = (AllowPrivateAccess = true))
 	ERootYawOffsetMode RootYawOffsetMode;
@@ -191,6 +200,16 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LocomotionSM Data", meta = (AllowPrivateAccess = true))
 	EAnimEnumCardinalDirection PivotInitialDirection;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "LocomotionSM Data", meta = (AllowPrivateAccess = true))
+	float JogAngle;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "LocomotionSM Data", meta = (AllowPrivateAccess = true))
+	EAnimEnumCardinalTurnDirection PivotJogAngleDirection;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "LocomotionSM Data", meta = (AllowPrivateAccess = true))
+	bool bIsADS;
+
 public:
 
 	UFUNCTION(BlueprintCallable)
@@ -202,6 +221,7 @@ public:
 
 	void SetupStartState();
 
+	void UpdateMovementAngle();
 	void UpdateLocationData(const float& DeltaTime);
 	void UpdateRotationData();
 	void UpdateVelocityData();

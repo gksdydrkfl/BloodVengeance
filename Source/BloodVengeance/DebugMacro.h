@@ -24,6 +24,10 @@
 class BLOODVENGEANCE_API Debug
 {
 public:
+	static void Log(FName InValue, int32 InKey = -1, float InDuration = 5, FColor InColor = FColor::Blue)
+	{
+		GEngine->AddOnScreenDebugMessage(InKey, InDuration, InColor, InValue.ToString());
+	}
 	static void Log(int32 InValue, int32 InKey = -1, float InDuration = 5, FColor InColor = FColor::Blue)
 	{
 		GEngine->AddOnScreenDebugMessage(InKey, InDuration, InColor, FString::FromInt(InValue));

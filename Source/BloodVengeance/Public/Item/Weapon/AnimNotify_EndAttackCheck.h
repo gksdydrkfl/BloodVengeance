@@ -4,9 +4,6 @@
 #include "Animation/AnimNotifies/AnimNotify.h"
 #include "AnimNotify_EndAttackCheck.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class BLOODVENGEANCE_API UAnimNotify_EndAttackCheck : public UAnimNotify
 {

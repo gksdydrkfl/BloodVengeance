@@ -9,6 +9,14 @@ class BLOODVENGEANCE_API UBVAbilitySystemComponent : public UAbilitySystemCompon
 {
 	GENERATED_BODY()
 	
+protected:
+
+	TArray<FGameplayAbilitySpecHandle> InputPressedSpecHandles;
+
+	TArray<FGameplayAbilitySpecHandle> InputReleasedSpecHandles;
+
+	TArray<FGameplayAbilitySpecHandle> InputHeldSpecHandles;
+
 public:
 
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);

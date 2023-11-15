@@ -1,6 +1,7 @@
 #include "GAS/BVAbilitySystemComponent.h"
 #include "GAS/BVGameplayAbility.h"
 
+#include "BloodVengeance/DebugMacro.h"
 void UBVAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities)
 {
 	for (const TSubclassOf<UGameplayAbility> AbilityClass : StartupAbilities)
@@ -60,6 +61,9 @@ void UBVAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& Inpu
 		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
 		{
 			AbilitySpecInputReleased(AbilitySpec);
+			InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased,
+				AbilitySpec.Handle,
+				AbilitySpec.ActivationInfo.GetActivationPredictionKey());
 		}
 	}
 }

@@ -21,5 +21,9 @@ void FBVGameplayTags::InitGameplayTags()
 
 	GameplayTags.Effects_Death = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Effects.Death"), FString("Death"));
 
+	GameplayTags.Abilities_KatanaBaseAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.KatanaBaseAttack"), FString("Abilties KatanaBaseAttack"));
+
+	GameplayTags.Abilities_BowBaseAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.BowBaseAttack"), FString("Abilties BowBaseAttack"));
+
 	
 }
